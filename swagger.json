@@ -1,0 +1,271 @@
+{
+    "swagger":"2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "E-commerce API",
+      "description": "E-commerce API documentation"
+    },
+    "host": "localhost:3002",
+    "basePath": "/api",
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/create": {
+        "post": {
+          "summary": "Create a new user",
+          "description": "This endpoint creates a new user.",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "User object",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "User created"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/add-multiple": {
+        "post": {
+          "summary": "Add multiple products",
+          "description": "This endpoint adds multiple products.",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Array of product objects",
+              "required": true,
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Product"
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Products added"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/add": {
+        "post": {
+          "summary": "Add products to cart",
+          "description": "This endpoint adds products to a cart.",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Cart object",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Cart"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Products added to cart"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "404": {
+              "description": "Product not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/{userId}": {
+        "get": {
+          "summary": "Get cart",
+          "description": "This endpoint retrieves a cart by user ID.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "userId",
+              "type": "integer",
+              "required": true,
+              "description": "User ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Cart retrieved"
+            },
+            "404": {
+              "description": "Cart not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/delete": {
+        "delete": {
+          "summary": "Delete products from cart",
+          "description": "This endpoint deletes products from a cart.",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Cart and product IDs",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/DeleteRequest"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Products removed from cart"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/update": {
+        "put": {
+          "summary": "Update cart product quantity",
+          "description": "This endpoint updates the quantity of a product in the cart.",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Cart product object",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/UpdateRequest"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Product quantity updated"
+            },
+            "400": {
+              "description": "Insufficient product quantity"
+            },
+            "404": {
+              "description": "Product not found in cart"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "User": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "required": ["productName", "quantity", "description", "price"],
+        "properties": {
+          "productName": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "Cart": {
+        "type": "object",
+        "required": ["userId", "products"],
+        "properties": {
+          "userId": {
+            "type": "integer"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "productId": {
+                  "type": "integer"
+                },
+                "quantity": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DeleteRequest": {
+        "type": "object",
+        "required": ["cartId", "productIds"],
+        "properties": {
+          "cartId": {
+            "type": "integer"
+          },
+          "productIds": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "UpdateRequest": {
+        "type": "object",
+        "required": ["cartId", "productId", "quantity"],
+        "properties": {
+          "cartId": {
+            "type": "integer"
+          },
+          "productId": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+  
